@@ -15,12 +15,12 @@ class OfferCreateReqTest {
 	void toDomain_whenInvoke_thenMappingCorrectly() {
 		var createReq = new OfferCreateReq(2,  Timestamp.valueOf("2023-12-12 01:02:03.123456789"), null, 3, 
 				"Product123", 1, new BigDecimal(99.99), "USD");
-		var clientDomain = new Offer(null, 2,  Timestamp.valueOf("2023-12-12 01:02:03.123456789"), null, 3, 
+		var offerDomain = new Offer(null, 2,  Timestamp.valueOf("2023-12-12 01:02:03.123456789"), null, 3, 
 				"Product123", 1, new BigDecimal(99.99), "USD");
 
 		var result = OfferCreateReq.toDomain(createReq);
 
-		assertEquals(clientDomain, result);
+		assertEquals(offerDomain, result);
 	}
 
 }

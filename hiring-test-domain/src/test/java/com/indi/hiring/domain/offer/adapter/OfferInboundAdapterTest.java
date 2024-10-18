@@ -21,7 +21,7 @@ import com.indi.hiring.domain.offer.usecase.DeleteOffersCmd;
 import com.indi.hiring.domain.offer.usecase.GetOffersQry;
 
 
-class ClientInboundAdapterTest {
+class OfferInboundAdapterTest {
 
 	private final UseCaseBus bus = mock(UseCaseBus.class);
 	private final OfferInboundAdapter sut = new OfferInboundAdapter(bus);
