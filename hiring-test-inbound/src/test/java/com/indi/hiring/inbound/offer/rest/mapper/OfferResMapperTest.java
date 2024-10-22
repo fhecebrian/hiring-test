@@ -1,4 +1,4 @@
-package com.indi.hiring.inbound.offer.rest.dto;
+package com.indi.hiring.inbound.offer.rest.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,10 +7,16 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.indi.hiring.domain.offer.model.Offer;
+import com.indi.hiring.inbound.exception.BussinesRuleException;
+import com.indi.hiring.inbound.offer.rest.dto.OfferRes;
 
-class OfferResTest {
+class OfferResMapperTest {
+
+	private OfferResMapper offerResMapper = Mappers.getMapper( OfferResMapper.class );
 
 	private  Offer offer1 = new Offer(1L, 2,  Timestamp.valueOf("2023-12-12 01:02:03.123456789"), null, 3, 
 			"Product123", 1, new BigDecimal(99.99), "USD");
@@ -18,7 +24,7 @@ class OfferResTest {
 			"Product345", 1, new BigDecimal(199.99), "EUR");
 	
 	@Test
-	void toResponse_whenHasList_thenMappingCorrectly() {
+	void toResponse_whenHasList_thenMappingCorrectly() throws BussinesRuleException {
 		var offerDomainList = List.of(
 				offer1,
 				offer2
@@ -30,7 +36,7 @@ class OfferResTest {
 						"Product345", 1, new BigDecimal(199.99), "EUR")
 		);
 
-		var result = OfferRes.toResponse(offerDomainList);
+		var result = offerResMapper.toResponse(offerDomainList);
 
 		assertEquals(offerResList, result);
 	}

@@ -13,43 +13,55 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.indi.hiring.domain.offer.port.OfferInboundPort;
+import com.indi.hiring.inbound.exception.BussinesRuleException;
 import com.indi.hiring.inbound.offer.rest.dto.OfferCreateReq;
 import com.indi.hiring.inbound.offer.rest.dto.OfferRes;
+import com.indi.hiring.inbound.offer.rest.mapper.OfferCreateMapper;
+import com.indi.hiring.inbound.offer.rest.mapper.OfferResMapper;
 
 @RestController
 @RequestMapping("offer")
 public class OfferController {
 	private final OfferInboundPort port;
 
-	public OfferController(OfferInboundPort port) {
+    private OfferCreateMapper offerCreateMapper;
+    
+    private OfferResMapper offerResMapper;
+    
+	public OfferController(OfferInboundPort port, OfferCreateMapper offerCreateMapper, OfferResMapper offerResMapper) {
 		this.port = port;
+		this.offerCreateMapper = offerCreateMapper;
+		this.offerResMapper = offerResMapper;
 	}
 
 	@PostMapping()
-	public ResponseEntity<OfferRes> createOffer(@RequestBody OfferCreateReq offerToCreate) {
-		var offer = port.create(OfferCreateReq.toDomain(offerToCreate));
-		return ResponseEntity.status(HttpStatus.CREATED).body(OfferRes.toResponse(offer));
+	public ResponseEntity<?> createOffer(@RequestBody OfferCreateReq offerToCreate) throws BussinesRuleException {
+		var offer = port.create(offerCreateMapper.toDomain(offerToCreate));
+		return ResponseEntity.status(HttpStatus.CREATED).body(offerResMapper.toResponse(offer));
 	}
 
 	@GetMapping()
-	public List<OfferRes> getAllOffers() {
-		return OfferRes.toResponse(port.findAll());
+	public ResponseEntity<List<OfferRes>> getAllOffers() throws BussinesRuleException {
+        List<OfferRes> findAll = offerResMapper.toResponse(port.findAll());
+        if(findAll.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+    	return ResponseEntity.ok(findAll);       
 	}
 
 	@GetMapping("/{id}")
-	public OfferRes getOfferById(@PathVariable Long id) {
-		return OfferRes.toResponse(port.findById(id));
+	public ResponseEntity<?> getOfferById(@PathVariable Long id) throws BussinesRuleException {
+		return ResponseEntity.ok(offerResMapper.toResponse(port.findById(id)));
 	}	
 	
 	@DeleteMapping("/{id}")
-	public Long deleteOfferById(@PathVariable Long id) {
-		return OfferRes.toResponse(port.deleteOfferById(id)).offerId();
+	public ResponseEntity<?> deleteOfferById(@PathVariable Long id) throws BussinesRuleException {
+		return ResponseEntity.status(HttpStatus.OK).body( offerResMapper.toResponse(port.deleteOfferById(id)).offerId());
 	}	
 
 	@DeleteMapping()
-	public List<Long> deleteAllOffers() {
-		return (OfferRes.toResponse(port.deleteAll())).stream()
-				.map(OfferRes::offerId).toList();
+	public ResponseEntity<?> deleteAllOffers() throws BussinesRuleException {
+		return ResponseEntity.status(HttpStatus.OK).body((offerResMapper.toResponse(port.deleteAll())).stream()
+				.map(OfferRes::offerId).toList());
 	}	
-	
 }
