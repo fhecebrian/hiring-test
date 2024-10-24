@@ -36,12 +36,6 @@ public class OfferJpaAdapter implements OfferOutboundPort {
 		return result.map(OfferMapper::toDomain).orElse(null);
 	}
 
-//	@Override
-//	public Offer update(Offer offer) {
-//		return OfferMapper.toDomain(repository.save(OfferMapper.toEntity(offer)));
-//	}
-	
-
 	@Override
 	public void deleteById(Long offerId) {
 		repository.deleteById(offerId);

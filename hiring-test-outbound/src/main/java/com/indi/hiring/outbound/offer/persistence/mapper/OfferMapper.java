@@ -12,8 +12,9 @@ public class OfferMapper {
 
 	public static Offer toDomain(OfferEntity entity) {
 		return new Offer(entity.getOfferId(), entity.getBrandId(), entity.getStartDate(),
-				entity.getEndDate(), entity.getPriceListId(), entity.getProductPartnumber(),
-				entity.getPriority(), entity.getPrice(), entity.getCurrencyIso());
+				entity.getEndDate(), entity.getPriceListId(), entity.getTalla(),
+				entity.getModelo(), entity.getCalidad(), entity.getPriority(), 
+				entity.getPrice(), entity.getCurrencyIso());
 	}
 	public static List<Offer> toDomain(List<OfferEntity> entityList) {
 		return entityList.stream().map(OfferMapper::toDomain).toList();
@@ -22,6 +23,7 @@ public class OfferMapper {
 	public static OfferEntity toEntity(Offer offer) {
 		return new OfferEntity(offer.offerId(), offer.brandId(),
 				offer.startDate(), offer.endDate(), offer.priceListId(),
-				offer.productPartnumber(), offer.priority(), offer.price(), offer.currencyIso());
+				offer.talla(), offer.modelo(), offer.calidad(), 
+				offer.priority(), offer.price(), offer.currencyIso());
 	}
 }

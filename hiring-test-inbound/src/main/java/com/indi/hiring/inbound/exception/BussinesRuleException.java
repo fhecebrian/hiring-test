@@ -7,15 +7,15 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class BussinesRuleException extends Exception{
+public class BussinesRuleException extends RuntimeException{
     
     private static final long serialVersionUID = 1L;
     
-	private long id;
-    private String code;   
-    private HttpStatus httpStatus;
+	private final long id;
+    private final String code;   
+    private final HttpStatus httpStatus;
     
-     public BussinesRuleException(long id, String code, String message,HttpStatus httpStatus) {
+     public BussinesRuleException(final long id, String code, String message,HttpStatus httpStatus) {
         super(message);
         this.id = id;
         this.code = code;
@@ -24,12 +24,16 @@ public class BussinesRuleException extends Exception{
 
     public BussinesRuleException(String code, String message,HttpStatus httpStatus) {
         super(message);
+		this.id = 0;
         this.code = code;
         this.httpStatus = httpStatus;
     }
     
     public BussinesRuleException(String message, Throwable cause) {
-        super(message, cause);
+		super(message, cause);
+        this.id = 0;
+		this.code = "";
+		this.httpStatus = null;
     }     
     
 }

@@ -15,42 +15,43 @@ import com.indi.hiring.outbound.offer.persistence.model.OfferEntity;
 
 class OfferMapperTest {
 
+	private  OfferEntity offerEntity = new OfferEntity(null, 2,  Timestamp.from(Instant.now()), null, 3, 
+			"00","0100","233", 1, new BigDecimal(99.99), "USD");
+	private  OfferEntity offerEntityExpeted = new OfferEntity(1L, 2,  Timestamp.from(Instant.now()), null, 3, 
+			"01","0200","333", 1, new BigDecimal(99.99), "USD");
+	private Offer offer = new Offer(1L, 2,  Timestamp.from(Instant.now()), null, 3, 
+			"00","0100","233", 1, new BigDecimal(99.99), "USD");
+	
     @Test
     void whenHasSingleElement_thenMappingCorrectly() {
-    	OfferEntity entity = new OfferEntity(1L, 2,  Timestamp.from(Instant.now()), null, 3, 
-    			"Product123", 1, new BigDecimal(99.99), "USD");
-        Offer offer = OfferMapper.toDomain(entity);
+        Offer offer = OfferMapper.toDomain(offerEntity);
 
-        assertEquals(entity.getOfferId(), offer.offerId());
-        assertEquals(entity.getBrandId(), offer.brandId());
-        assertEquals(entity.getStartDate(), offer.startDate());
-        assertEquals(entity.getEndDate(), offer.endDate());
-        assertEquals(entity.getPriceListId(), offer.priceListId());
-        assertEquals(entity.getProductPartnumber(), offer.productPartnumber());
-        assertEquals(entity.getPriority(), offer.priority());
-        assertEquals(entity.getPrice(), offer.price());
-        assertEquals(entity.getCurrencyIso(), offer.currencyIso());
+        assertEquals(offerEntity.getOfferId(), offer.offerId());
+        assertEquals(offerEntity.getBrandId(), offer.brandId());
+        assertEquals(offerEntity.getStartDate(), offer.startDate());
+        assertEquals(offerEntity.getEndDate(), offer.endDate());
+        assertEquals(offerEntity.getPriceListId(), offer.priceListId());
+        assertEquals(offerEntity.getTalla(), offer.talla());
+        assertEquals(offerEntity.getModelo(), offer.modelo());
+        assertEquals(offerEntity.getCalidad(), offer.calidad());
+        assertEquals(offerEntity.getPriority(), offer.priority());
+        assertEquals(offerEntity.getPrice(), offer.price());
+        assertEquals(offerEntity.getCurrencyIso(), offer.currencyIso());
     }
 
     @Test
     void toDomain_whenHasList_thenMappingCorrectly() {
-    	OfferEntity entity1 = new OfferEntity(1L, 2,  Timestamp.from(Instant.now()), null, 3, 
-    			"Product123", 1, new BigDecimal(99.99), "USD");
-    	OfferEntity entity2 = new OfferEntity(2L, 3,  Timestamp.from(Instant.now()), null, 4, 
-    			"Product456", 1, new BigDecimal(199.99), "EUR");
-        List<OfferEntity> entityList = Arrays.asList(entity1, entity2);
+        List<OfferEntity> entityList = Arrays.asList(offerEntity, offerEntityExpeted);
 
         List<Offer> offerList = OfferMapper.toDomain(entityList);
 
         assertEquals(2, offerList.size());
-        assertEquals(entity1.getOfferId(), offerList.get(0).offerId());
-        assertEquals(entity2.getOfferId(), offerList.get(1).offerId());
+        assertEquals(offerEntity.getOfferId(), offerList.get(0).offerId());
+        assertEquals(offerEntityExpeted.getOfferId(), offerList.get(1).offerId());
     }
 
     @Test
     void toEntity_whenInvoke_thenMappingCorrectly() {
-    	Offer offer = new Offer(1L, 2,  Timestamp.from(Instant.now()), null, 3, 
-    			"Product123", 1, new BigDecimal(99.99), "USD");
         OfferEntity entity = OfferMapper.toEntity(offer);
 
         assertEquals(offer.offerId(), entity.getOfferId());
@@ -58,7 +59,9 @@ class OfferMapperTest {
         assertEquals(offer.startDate(), entity.getStartDate());
         assertEquals(offer.endDate(), entity.getEndDate());
         assertEquals(offer.priceListId(), entity.getPriceListId());
-        assertEquals(offer.productPartnumber(), entity.getProductPartnumber());
+        assertEquals(offer.talla(), offerEntity.getTalla());
+        assertEquals(offer.modelo(), offerEntity.getModelo());
+        assertEquals(offer.calidad(), offerEntity.getCalidad());
         assertEquals(offer.priority(), entity.getPriority());
         assertEquals(offer.price(), entity.getPrice());
         assertEquals(offer.currencyIso(), entity.getCurrencyIso());

@@ -1,6 +1,7 @@
 package com.indi.hiring.inbound.offer.rest.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import com.indi.hiring.inbound.offer.rest.dto.OfferCreateReq;
 import com.indi.hiring.inbound.offer.rest.dto.OfferRes;
 import com.indi.hiring.inbound.offer.rest.mapper.OfferCreateMapper;
 import com.indi.hiring.inbound.offer.rest.mapper.OfferResMapper;
+import com.indi.hiring.inbound.offer.rest.validation.OfferValidation;
 
 @RestController
 @RequestMapping("offer")
@@ -36,21 +38,26 @@ public class OfferController {
 
 	@PostMapping()
 	public ResponseEntity<?> createOffer(@RequestBody OfferCreateReq offerToCreate) throws BussinesRuleException {
+		OfferValidation.validateOffer.accept(offerToCreate);
 		var offer = port.create(offerCreateMapper.toDomain(offerToCreate));
 		return ResponseEntity.status(HttpStatus.CREATED).body(offerResMapper.toResponse(offer));
 	}
 
 	@GetMapping()
 	public ResponseEntity<List<OfferRes>> getAllOffers() throws BussinesRuleException {
-        List<OfferRes> findAll = offerResMapper.toResponse(port.findAll());
-        if(findAll.isEmpty()){
+        List<OfferRes> findAllOffers = offerResMapper.toResponse(port.findAll());
+        if(findAllOffers.isEmpty()){
             return ResponseEntity.noContent().build();
         }
-    	return ResponseEntity.ok(findAll);       
+    	return ResponseEntity.ok(findAllOffers);       
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getOfferById(@PathVariable Long id) throws BussinesRuleException {
+		OfferRes offer = offerResMapper.toResponse(port.findById(id));
+		if(Objects.isNull(offer)) {
+			return ResponseEntity.noContent().build();
+		}
 		return ResponseEntity.ok(offerResMapper.toResponse(port.findById(id)));
 	}	
 	

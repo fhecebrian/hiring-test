@@ -27,9 +27,9 @@ class OfferInboundAdapterTest {
 	private final OfferInboundAdapter sut = new OfferInboundAdapter(bus);
 
 	private  Offer offer = new Offer(null, 2,  Timestamp.from(Instant.now()), null, 3, 
-			"Product123", 1, new BigDecimal(99.99), "USD");
+			"00","0100","233", 1, new BigDecimal(99.99), "USD");
 	private  Offer offerExpeted = new Offer(1L, 2,  Timestamp.from(Instant.now()), null, 3, 
-			"Product123", 1, new BigDecimal(99.99), "USD");
+			"01","0200","333", 1, new BigDecimal(99.99), "USD");
 	
 	@Test
 	void create_whenInvoke_thenCallCreateOfferCmd() {
